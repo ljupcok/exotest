@@ -3,21 +3,24 @@
 //$request = $db->query('SELECT id, nom, forcePerso, degats, experience FROM individu');
 //$donnees = $request->fetch(PDO::FETCH_ASSOC));
 
-
 class Personnage
 {
     private $_id;
     private $_nom;
     private $_degats;
     private $_experience;
-    private $_force;
+    private $_forcePerso;
     private $_pointDeVie;
 
 
+    public function __construct(array $donnees)
+    {
+        $this->hydrate($donnees);
+    }
 
-    // public function __construct($force, $degats, $pointDeVie)
+    // public function __construct($forcePerso, $degats, $pointDeVie)
     //{
-    //$this->setForce($force);
+    //$this->setForcePerso($forcePerso);
     //$this->setDegats($degats);
     //$this->setPointDeVie($pointDeVie);
     //$this->_experience = 1;
@@ -25,23 +28,12 @@ class Personnage
 
     public function hydrate(array $donnees)
     {
-        if (isset($donnees['id'])) {
-            $this->setId = $donnees['id'];
-        }
-        if (isset($donnees['nom'])) {
-            $this->setNom = $donnees['nom'];
-        }
-        if (isset($donnees['degats'])) {
-            $this->setDegats = $donnees['degats'];
-        }
-        if (isset($donnees['experience'])) {
-            $this->setExperience = $donnees['experience'];
-        }
-        if (isset($donnees['force'])) {
-            $this->setForce = $donnees['force'];
-        }
-        if (isset($donnees['pointDeVie'])) {
-            $this->setPointDeVie = $donnees['pointDeVie'];
+        foreach ($donnees as $key => $value) {
+            $method = 'set' . ucfirst($key);
+
+            if (method_exists($this, $method)) {
+                $this->$method($value);
+            }
         }
     }
 
@@ -55,19 +47,23 @@ class Personnage
     {
         return $this->_nom;
     }
-    function degats()
+
+    public function degats()
     {
         return $this->_degats;
     }
-    function pointDeVie()
+
+    public function pointDeVie()
     {
         return $this->_pointDeVie;
     }
-    function force()
+
+    public function forcePerso()
     {
-        return $this->_force;
+        return $this->_forcePerso;
     }
-    function experience()
+
+    public function experience()
     {
         return $this->_experience;
     }
@@ -77,7 +73,6 @@ class Personnage
 
     public function setId(int $id)
     {
-
         if ($id > 0) {
             $this->_id = $id;
         }
@@ -90,11 +85,10 @@ class Personnage
         }
     }
 
-    public function setForce(int $force)
+    public function setForcePerso(int $forcePerso)
     {
-
-        if ($force >= 1 && $force <= 100) {
-            $this->_force = $force;
+        if ($forcePerso >= 1 && $forcePerso <= 100) {
+            $this->_forcePerso = $forcePerso;
         }
     }
 
@@ -107,7 +101,6 @@ class Personnage
 
     public function setPointDeVie(int $pointDeVie)
     {
-
         if ($pointDeVie >= 1 && $pointDeVie <= 100) {
             $this->_pointDeVie = $pointDeVie;
         }
@@ -115,7 +108,6 @@ class Personnage
 
     public function setExperience(int $experience)
     {
-
         if ($experience >= 1 && $experience <= 100) {
             $this->_experience = $experience;
         }
@@ -123,17 +115,20 @@ class Personnage
 
     // méthode d'action //
 
-    function frapper(Personnage $persoAFrapper)
+    public function frapper(Personnage $persoAFrapper)
     {
-        $persoAFrapper->_degats += $this->_force;
+        $persoAFrapper->_degats += $this->_forcePerso;
     }
 
-    function gagnerExperience()
+    public function gagnerExperience()
     {
         $this->_experience = $this->_experience + 1; //$this->_experience++//
     }
 
-    function perteVie()
+    public function perteVie()
     {
+        if ($this->_degats >= 100) {
+            //return 
+        }
     }
 }
