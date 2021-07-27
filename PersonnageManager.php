@@ -1,5 +1,7 @@
 <?php
 
+require 'Personnage.php';
+
 class PersonnageManager
 {
     private $_db;
@@ -28,8 +30,8 @@ class PersonnageManager
     public function get(int $id)
     {
 
-        $q = $this->_db->query('SELECT id, nom, forcePerso, degats, experience, pointDeVie FROM individu WHERE id = ' . $id);
-        $donnees = $q->fetch(PDO::FETCH_ASSOC);
+        $q = $this->_db->query('SELECT id, nom, forcePerso, experience, pointDeVie FROM individu WHERE id = ' . $id);
+        $donnees = $q->fetch();
 
         return new Personnage($donnees);
     }
@@ -38,7 +40,7 @@ class PersonnageManager
     {
         $persos = [];
 
-        $q = $this->_db->query('SELECT id, nom, forcePerso, degats, niveau, experience, pointDeVie FROM personnages ORDER BY nom');
+        $q = $this->_db->query('SELECT id, nom, forcePerso, niveau, experience, pointDeVie FROM personnages ORDER BY nom');
 
         while ($donnees = $q->fetch(PDO::FETCH_ASSOC)) {
             $persos[] = new Personnage($donnees);
@@ -49,10 +51,9 @@ class PersonnageManager
 
     public function update(Personnage $perso)
     {
-        $q = $this->_db->prepare('UPDATE individu SET forcePerso = :forcePerso, degats = :degats, experience = :experience, pointDeVie = :pointDeVie WHERE id = :id');
+        $q = $this->_db->prepare('UPDATE individu SET forcePerso = :forcePerso, experience = :experience, pointDeVie = :pointDeVie WHERE id = :id');
 
         $q->bindValue(':forcePerso', $perso->forcePerso(), PDO::PARAM_INT);
-        $q->bindValue(':degats', $perso->degats(), PDO::PARAM_INT);
         $q->bindValue(':experience', $perso->experience(), PDO::PARAM_INT);
         $q->bindValue(':pointDeVie', $perso->pointDeVie(), PDO::PARAM_INT);
         $q->bindValue(':id', $perso->id(), PDO::PARAM_INT);

@@ -7,7 +7,6 @@ class Personnage
 {
     private $_id;
     private $_nom;
-    private $_degats;
     private $_experience;
     private $_forcePerso;
     private $_pointDeVie;
@@ -48,16 +47,6 @@ class Personnage
         return $this->_nom;
     }
 
-    public function degats()
-    {
-        return $this->_degats;
-    }
-
-    public function pointDeVie()
-    {
-        return $this->_pointDeVie;
-    }
-
     public function forcePerso()
     {
         return $this->_forcePerso;
@@ -68,6 +57,10 @@ class Personnage
         return $this->_experience;
     }
 
+    public function pointDeVie()
+    {
+        return $this->_pointDeVie;
+    }
 
     // Setter //
 
@@ -92,10 +85,10 @@ class Personnage
         }
     }
 
-    public function setDegats(int $degats)
+    public function setExperience(int $experience)
     {
-        if ($degats >= 1 && $degats <= 100) {
-            $this->_degats = $degats;
+        if ($experience >= 1 && $experience <= 100) {
+            $this->_experience = $experience;
         }
     }
 
@@ -106,29 +99,24 @@ class Personnage
         }
     }
 
-    public function setExperience(int $experience)
-    {
-        if ($experience >= 1 && $experience <= 100) {
-            $this->_experience = $experience;
-        }
-    }
-
     // méthode d'action //
 
     public function frapper(Personnage $persoAFrapper)
     {
-        $persoAFrapper->_degats += $this->_forcePerso;
+        $persoAFrapper->setPointDeVie($persoAFrapper->pointDeVie() - $this->forcePerso());
+        echo $this->nom() . " a frapper " . $persoAFrapper->nom() . "<br><br>";
+        $persoAFrapper->AfficherPerteVie($this->forcePerso());
+        //var_dump($persoAFrapper);
+    }
+
+    public function AfficherPerteVie(int $quantite)
+    {
+        echo "Le joueur " . $this->nom() . " à perdu " . $quantite . " point de vie <br><br>";
+        echo "il lui reste " . $this->pointDeVie();
     }
 
     public function gagnerExperience()
     {
         $this->_experience = $this->_experience + 1; //$this->_experience++//
-    }
-
-    public function perteVie()
-    {
-        if ($this->_degats >= 100) {
-            //return 
-        }
     }
 }
