@@ -10,6 +10,7 @@ class Personnage
     private $_experience;
     private $_forcePerso;
     private $_pointDeVie;
+    private $_niveauPerso;
 
     const LEVEL_UP = 10;
 
@@ -17,14 +18,6 @@ class Personnage
     {
         $this->hydrate($donnees);
     }
-
-    // public function __construct($forcePerso, $degats, $pointDeVie)
-    //{
-    //$this->setForcePerso($forcePerso);
-    //$this->setDegats($degats);
-    //$this->setPointDeVie($pointDeVie);
-    //$this->_experience = 1;
-    //}
 
     public function hydrate(array $donnees)
     {
@@ -61,6 +54,11 @@ class Personnage
     public function pointDeVie()
     {
         return $this->_pointDeVie;
+    }
+
+    public function niveauPerso()
+    {
+        return $this->_niveauPerso;
     }
 
     // Setter //
@@ -100,6 +98,12 @@ class Personnage
         }
     }
 
+    public function setNiveauPerso(int $niveauPerso)
+    {
+        if ($niveauPerso >= 1 && $niveauPerso <= 100) {
+            $this->_niveauPerso = $niveauPerso;
+        }
+    }
     // méthode d'action //
 
     public function frapper(Personnage $persoAFrapper)
@@ -107,9 +111,16 @@ class Personnage
         $persoAFrapper->setPointDeVie($persoAFrapper->pointDeVie() - $this->forcePerso());
         echo $this->nom() . " a frapper " . $persoAFrapper->nom() . "<br><br>";
         $persoAFrapper->AfficherPerteVie($this->forcePerso());
-        $this->nom()->setExperience();
-        $this->nom()->AfficherExperience();
-        //var_dump($persoAFrapper);
+        $this->gagnerExperience();
+    }
+
+    public function gagnerExperience(int $qtt = 4)
+    {
+        $this->setExperience($this->experience() + $qtt);
+        $this->AfficherExperience($qtt);
+        if ($this->experience() >= 10) {
+            $this->levelUp();
+        }
     }
 
     public function AfficherPerteVie(int $quantite)
@@ -118,25 +129,16 @@ class Personnage
         echo "il lui reste " . $this->pointDeVie() . "<br><br>";
     }
 
-    public function gagnerExperience()
+    public function AfficherExperience(int $exp)
     {
-        $this->_experience = $this->_experience + 1; //$this->_experience++//
+        echo "le joueur " . $this->nom() . " à gagné " . $exp . " d'expérience durant ce combat <br><br>";
     }
 
-    public function AfficherExperience(int $experience)
+    public function levelUp()
     {
-        echo "le joueur " . $this->nom() . " à gagné " . $this->_experience . " d'expérience durant ce combat";
+        $this->setNiveauPerso($this->niveauPerso() + 1);
+        $this->setPointDeVie(100);
+        $this->setExperience(0);
+        echo $this->nom() . "à gagné " . $this->niveauPerso() . "<br><br>";
     }
-
-    //public function levelUp()
-    //{
-    //  if($experience >= 10)
-    //   {
-
-    //   }
-
-    //}
-
-
-
 }

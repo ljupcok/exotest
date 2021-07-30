@@ -16,5 +16,8 @@ $perso2 = $PersonnageManager->get(2);
 
 
 $perso1->frapper($perso2);
-$perso1->gagnerExperience();
-$perso1->AfficherExperience();
+$perso1->frapper($perso2);
+$perso1->frapper($perso2);
+$perso1->frapper($perso2);
+$perso1->frapper($perso2);
+$perso1->frapper($perso2);
