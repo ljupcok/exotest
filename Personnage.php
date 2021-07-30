@@ -11,6 +11,7 @@ class Personnage
     private $_forcePerso;
     private $_pointDeVie;
 
+    const LEVEL_UP = 10;
 
     public function __construct(array $donnees)
     {
@@ -87,7 +88,7 @@ class Personnage
 
     public function setExperience(int $experience)
     {
-        if ($experience >= 1 && $experience <= 100) {
+        if ($experience >= 1 && $experience <= 10) {
             $this->_experience = $experience;
         }
     }
@@ -106,17 +107,36 @@ class Personnage
         $persoAFrapper->setPointDeVie($persoAFrapper->pointDeVie() - $this->forcePerso());
         echo $this->nom() . " a frapper " . $persoAFrapper->nom() . "<br><br>";
         $persoAFrapper->AfficherPerteVie($this->forcePerso());
+        $this->nom()->setExperience();
+        $this->nom()->AfficherExperience();
         //var_dump($persoAFrapper);
     }
 
     public function AfficherPerteVie(int $quantite)
     {
         echo "Le joueur " . $this->nom() . " à perdu " . $quantite . " point de vie <br><br>";
-        echo "il lui reste " . $this->pointDeVie();
+        echo "il lui reste " . $this->pointDeVie() . "<br><br>";
     }
 
     public function gagnerExperience()
     {
         $this->_experience = $this->_experience + 1; //$this->_experience++//
     }
+
+    public function AfficherExperience(int $experience)
+    {
+        echo "le joueur " . $this->nom() . " à gagné " . $this->_experience . " d'expérience durant ce combat";
+    }
+
+    //public function levelUp()
+    //{
+    //  if($experience >= 10)
+    //   {
+
+    //   }
+
+    //}
+
+
+
 }
