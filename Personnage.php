@@ -12,7 +12,7 @@ class Personnage
     private $_pointDeVie;
     private $_niveauPerso;
 
-    const LEVEL_UP = 10;
+    const MAX_EXPERIENCE = 10;
 
     public function __construct(array $donnees)
     {
@@ -86,7 +86,7 @@ class Personnage
 
     public function setExperience(int $experience)
     {
-        if ($experience >= 1 && $experience <= 10) {
+        if ($experience >= 0) {
             $this->_experience = $experience;
         }
     }
@@ -108,25 +108,30 @@ class Personnage
 
     public function frapper(Personnage $persoAFrapper)
     {
-        $persoAFrapper->setPointDeVie($persoAFrapper->pointDeVie() - $this->forcePerso());
         echo $this->nom() . " a frapper " . $persoAFrapper->nom() . "<br><br>";
-        $persoAFrapper->AfficherPerteVie($this->forcePerso());
+        $persoAFrapper->subirDegats($this->calculeDegatsInfliger());
         $this->gagnerExperience();
+    }
+
+    private function calculeDegatsInfliger()
+    {
+        return $this->niveauPerso() * $this->forcePerso();
     }
 
     public function gagnerExperience(int $qtt = 4)
     {
         $this->setExperience($this->experience() + $qtt);
         $this->AfficherExperience($qtt);
-        if ($this->experience() >= 10) {
+        if ($this->experience() >= self::MAX_EXPERIENCE) {
             $this->levelUp();
         }
     }
 
+
+
     public function AfficherPerteVie(int $quantite)
     {
-        echo "Le joueur " . $this->nom() . " à perdu " . $quantite . " point de vie <br><br>";
-        echo "il lui reste " . $this->pointDeVie() . "<br><br>";
+        echo "Il lui reste " . $this->pointDeVie() . " de PV. <br><br>";
     }
 
     public function AfficherExperience(int $exp)
@@ -139,6 +144,13 @@ class Personnage
         $this->setNiveauPerso($this->niveauPerso() + 1);
         $this->setPointDeVie(100);
         $this->setExperience(0);
-        echo $this->nom() . "à gagné " . $this->niveauPerso() . "<br><br>";
+        echo $this->nom() . "à gagné 1 niveau <br><br>";
+    }
+
+
+    public function subirDegats(int $degats)
+    {
+        $this->setPointDeVie($this->pointDeVie() - $degats);
+        $this->AfficherPerteVie($degats);
     }
 }
