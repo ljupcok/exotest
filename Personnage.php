@@ -112,10 +112,36 @@ class Personnage
 
     private function calculeDegatsInfliger()
     {
-        return $this->niveauPerso() * $this->forcePerso();
+        $degats = $this->niveauPerso() * $this->forcePerso();
+
+        if ($this->coupCritique()) {
+            $degats = $degats * 2;
+        }
+
+        return $degats;
     }
 
-    public function gagnerExperience(int $qtt = 4)
+    private function coupCritique()
+    {
+        if ($this->chiffreAleatoire() == 3) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private function chiffreAleatoire($longueur = 1)
+    {
+        $chiffre = '12345';
+        $longueurMax = strlen($chiffre);
+        $chaineAleatoire = '';
+        for ($i = 0; $i < $longueur; $i++) {
+            $chaineAleatoire = $chiffre[rand(0, $longueurMax - 1)];
+        }
+        return $chaineAleatoire;
+    }
+
+    private function gagnerExperience(int $qtt = 4)
     {
         $this->setExperience($this->experience() + $qtt);
         $this->AfficherExperience($qtt);
@@ -124,17 +150,17 @@ class Personnage
         }
     }
 
-    public function AfficherPerteVie(int $quantite)
+    private function AfficherPerteVie(int $quantite)
     {
         echo "Il lui reste " . $this->pointDeVie() . " de PV. <br><br>";
     }
 
-    public function AfficherExperience(int $exp)
+    private function AfficherExperience(int $exp)
     {
         echo "le joueur " . $this->nom() . " à gagné " . $exp . " d'expérience durant ce combat <br><br>";
     }
 
-    public function levelUp()
+    private function levelUp()
     {
         $this->setNiveauPerso($this->niveauPerso() + 1);
         $this->setPointDeVie(100);
@@ -142,28 +168,9 @@ class Personnage
         echo $this->nom() . "à gagné 1 niveau <br><br>";
     }
 
-    public function subirDegats(int $degats)
+    private function subirDegats(int $degats)
     {
         $this->setPointDeVie($this->pointDeVie() - $degats);
         $this->AfficherPerteVie($degats);
-    }
-
-    public function CoupCritique(int $critique)
-    {
-        if ($critique >= 6) {
-            $this->calculeDegatsInfliger() * 2;
-        }
-        //echo "Voila un chiffre " . $this->ChiffreAleatoire();
-    }
-
-    public function ChiffreAleatoire($longueur = 1)
-    {
-        $chiffre = '123456789';
-        $longueurMax = strlen($chiffre);
-        $chaineAleatoire = '';
-        for ($i = 0; $i < $longueur; $i++) {
-            $chaineAleatoire = $chiffre[rand(0, $longueurMax - 1)];
-        }
-        return $chaineAleatoire;
     }
 }
