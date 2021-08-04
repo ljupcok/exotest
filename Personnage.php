@@ -1,7 +1,4 @@
 <?php
-//require 'Connexion.php';
-//$request = $db->query('SELECT id, nom, forcePerso, degats, experience FROM individu');
-//$donnees = $request->fetch(PDO::FETCH_ASSOC));
 
 class Personnage
 {
@@ -127,8 +124,6 @@ class Personnage
         }
     }
 
-
-
     public function AfficherPerteVie(int $quantite)
     {
         echo "Il lui reste " . $this->pointDeVie() . " de PV. <br><br>";
@@ -147,10 +142,28 @@ class Personnage
         echo $this->nom() . "à gagné 1 niveau <br><br>";
     }
 
-
     public function subirDegats(int $degats)
     {
         $this->setPointDeVie($this->pointDeVie() - $degats);
         $this->AfficherPerteVie($degats);
+    }
+
+    public function CoupCritique(int $critique)
+    {
+        if ($critique >= 6) {
+            $this->calculeDegatsInfliger() * 2;
+        }
+        //echo "Voila un chiffre " . $this->ChiffreAleatoire();
+    }
+
+    public function ChiffreAleatoire($longueur = 1)
+    {
+        $chiffre = '123456789';
+        $longueurMax = strlen($chiffre);
+        $chaineAleatoire = '';
+        for ($i = 0; $i < $longueur; $i++) {
+            $chaineAleatoire = $chiffre[rand(0, $longueurMax - 1)];
+        }
+        return $chaineAleatoire;
     }
 }
