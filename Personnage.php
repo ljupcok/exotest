@@ -90,7 +90,11 @@ class Personnage
 
     public function setPointDeVie(int $pointDeVie)
     {
-        if ($pointDeVie >= 1 && $pointDeVie <= 100) {
+        if ($pointDeVie < 0) {
+            $pointDeVie = 0;
+        }
+
+        if ($pointDeVie <= 100) {
             $this->_pointDeVie = $pointDeVie;
         }
     }
@@ -106,19 +110,24 @@ class Personnage
     public function frapper(Personnage $persoAFrapper)
     {
         echo $this->nom() . " a frapper " . $persoAFrapper->nom() . "<br><br>";
-        $persoAFrapper->subirDegats($this->calculeDegatsInfliger());
-        $this->gagnerExperience();
+        $isCoupCritique = $this->coupCritique();
+        $persoAFrapper->subirDegats($this->calculeDegatsInfliger($isCoupCritique));
+        $this->gagnerExperience($isCoupCritique);
     }
 
-    private function calculeDegatsInfliger()
+    private function calculeDegatsInfliger(bool $isCoupCritique)
     {
         $degats = $this->niveauPerso() * $this->forcePerso();
-
-        if ($this->coupCritique()) {
+        if ($isCoupCritique) {
             $degats = $degats * 2;
         }
-
         return $degats;
+    }
+
+    private function mourrir()
+    {
+        echo  $this->nom() . ' est mort <br><br>';
+        // DELETE FROM `individu` WHERE id = ? ;
     }
 
     private function coupCritique()
@@ -129,6 +138,7 @@ class Personnage
             return false;
         }
     }
+
 
     private function chiffreAleatoire($longueur = 1)
     {
@@ -141,12 +151,19 @@ class Personnage
         return $chaineAleatoire;
     }
 
-    private function gagnerExperience(int $qtt = 4)
+    private function gagnerExperience(bool $isCoupCritique, int $qtt = 5)
     {
-        $this->setExperience($this->experience() + $qtt);
+        if ($isCoupCritique) {
+            $qtt = $qtt * rand(2, 5);
+        }
+
+        $this->setExperience($this->experience() + $qtt); // attibut
+        $niveauGagner = floor($this->experience() / self::MAX_EXPERIENCE);
+        $experienceRestant = $this->experience() % self::MAX_EXPERIENCE;
         $this->AfficherExperience($qtt);
+
         if ($this->experience() >= self::MAX_EXPERIENCE) {
-            $this->levelUp();
+            $this->levelUp($niveauGagner, $experienceRestant);
         }
     }
 
@@ -160,17 +177,21 @@ class Personnage
         echo "le joueur " . $this->nom() . " à gagné " . $exp . " d'expérience durant ce combat <br><br>";
     }
 
-    private function levelUp()
+    private function levelUp(int $niveauGagner, $experienceRestant)
     {
-        $this->setNiveauPerso($this->niveauPerso() + 1);
+        $this->setNiveauPerso($this->niveauPerso() + $niveauGagner);
         $this->setPointDeVie(100);
-        $this->setExperience(0);
-        echo $this->nom() . "à gagné 1 niveau <br><br>";
+        $this->setExperience($experienceRestant);
+        echo $this->nom() . " à gagné " . $niveauGagner . " niveau , il est level " . $this->niveauPerso() . ".<br><br>";
     }
 
     private function subirDegats(int $degats)
     {
         $this->setPointDeVie($this->pointDeVie() - $degats);
         $this->AfficherPerteVie($degats);
+
+        if ($this->pointDeVie() <= 0) {
+            $this->mourrir();
+        }
     }
 }
