@@ -113,17 +113,17 @@ class Player
 
     public function punch(Player $hitOtherPlayer)
     {
-        echo  $this->name() . " à frappé " . $hitOtherPlayer->name() . " <br><br>";
+        echo $this->name() . " à frappé " . $hitOtherPlayer . " <br><br>";
         $isCritik = $this->critikStrike();
         $hitOtherPlayer->sufferDamage($this->calculeteDamage($isCritik));
-        $this->experienceGain($isCritik);
+        $this->experienceGain();
     }
 
     private function sufferDamage(int $damage)
     {
 
         $this->setHealth($this->health() - $damage);
-        echo " il lui reste " . $this->health() . " PV . <br><br>";
+        echo " il à perdu " . $this->health() . "<br><br>";
     }
 
     private function calculeteDamage(bool $isCritik)
@@ -149,19 +149,14 @@ class Player
         }
     }
 
-    private function experienceGain(bool $isCritik, int $exp = 5)
+    private function experienceGain(int $exp = 5)
     {
-        if ($isCritik) {
-            $exp = $exp * rand(2, 4);
-        }
 
         $this->setExperience($this->experience() + $exp);
         $levelGain = floor($this->experience() / self::MAX_EXP);
         $remainExp = $this->experience() % self::MAX_EXP;
 
-        $this->displayExp($exp);
-
-        if ($this->experience() >= self::MAX_EXP) {
+        if ($this->experience() >= 10) {
             $this->levelUp($levelGain, $remainExp);
         }
     }
@@ -169,11 +164,6 @@ class Player
     private function levelUp(int $levelGain, $remainExp)
     {
         $this->setLevel($this->level() * $levelGain);
-        echo $this->name() . " a gagné " . $levelGain . " niveau, il lui reste " . $remainExp . " d'experience <br><br>";
-    }
-
-    private function displayExp(int $totalExp)
-    {
-        echo $this->name() . " à gagné " . $totalExp . " exp. <br><br>";
+        echo $this->name() . " a gagné " . $levelGain . ", il lui reste " . $remainExp;
     }
 }

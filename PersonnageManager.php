@@ -19,7 +19,11 @@ class PersonnageManager
     {
 
         $q = $this->_db->query('SELECT ' . self::TABLE_CHAMPS . ' FROM ' . self::TABLE_NAME . ' WHERE id = ' . $id);
-        return $q->fetchObject(self::TABLE_OBJECT);
+        $data = $q->fetch();
+
+        return new Player($data);
+        //return $q->fetchObject(self::TABLE_OBJECT);
+
     }
 
     public function getList($nom)
