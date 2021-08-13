@@ -6,28 +6,17 @@ $Connexion = new Connexion();
 $PersonnageManager = new PersonnageManager($Connexion->dbConnect());
 
 $perso1 = $PersonnageManager->get(1);
-$perso2 = $PersonnageManager->get(3);
+$perso2 = $PersonnageManager->get(2);
 
 
-$perso1->frapper($perso2);
-$perso1->frapper($perso2);
-<<<<<<< Updated upstream
-$perso1->frapper($perso2);
-=======
->>>>>>> Stashed changes
-$perso1->frapper($perso2);
-$perso1->frapper($perso2);
-$perso1->frapper($perso2);
-$perso1->frapper($perso2);
-$perso1->frapper($perso2);
-$perso1->frapper($perso2);
-<<<<<<< Updated upstream
-$perso1->frapper($perso2);
-$perso1->frapper($perso2);
-$perso1->frapper($perso2);
-=======
-
->>>>>>> Stashed changes
+$perso1->punch($perso2);
+$perso1->punch($perso2);
+$perso1->punch($perso2);
+$perso1->punch($perso2);
+$perso1->punch($perso2);
+$perso1->punch($perso2);
+$perso1->punch($perso2);
+$perso1->punch($perso2);
 
 
 //$perso1->CoupCritique();
