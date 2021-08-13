@@ -32,8 +32,8 @@ class PersonnageManager
 
         $q = $this->_db->query('SELECT ' . self::TABLE_CHAMPS . ' FROM ' . self::TABLE_NAME . ' ORDER BY name');
 
-        while ($donnees = $q->fetch(PDO::FETCH_ASSOC)) {
-            $persos[] = new Player($donnees);
+        while ($data = $q->fetch(PDO::FETCH_ASSOC)) {
+            $persos[] = new Player($data);
         }
 
         return $persos;
